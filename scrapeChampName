@@ -1,0 +1,16 @@
+#it's stored in line 16, but in case you forget how to get there.
+
+from lxml import html
+import requests
+
+page = requests.get('http://www.mobafire.com/league-of-legends/champions')
+tree = html.fromstring(page.text)
+champs = tree.xpath('//div[@class="champ-name"]/text()')
+
+print ('Champions: ', champs)
+
+In [19]:
+pwd
+
+Out[19]:
+'C:\\x\\y\\Anaconda3'
