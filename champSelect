@@ -1,0 +1,81 @@
+//Chris Kopel
+<?php
+  session_start();
+  header("Cache-Control: no-cache");
+  header("Pragma: no-cache");
+    if (! isset($_SESSION['loggedIn'])) {
+	header( 'Location: http://www.leagueofpioneers.com' ) ;
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<title>League of Pioneers</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" >
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="home-styles.css">
+<link rel="shortcut icon" href="LoPlogo - tab.ico">
+</head>
+
+<body>
+
+<?php
+include 'header.php';
+?>
+
+<div id = maincontainer>
+  <FORM ACTION ="champselected.php" method = "post">
+  <br>
+  <div class="img">
+      <a href="http://www.leagueofpioneers.com/Welcome.php">
+      <img src="LoPlogo.png" alt="logo"></a>
+  </div>
+
+      <h1>My Stats - Champ Select <BR> <?php 
+      	echo $_SESSION["SummonerName"]; 
+      ?> - <?php 
+      	echo $_SESSION["Team_Name"]; 
+      ?> <BR>
+      
+	<?php
+	
+	mysql_connect('localhost', 'ckopel', 'xxx');
+	mysql_select_db('LeagueofPioneers');
+	
+	$sql = "SELECT DISTINCT(Champion) FROM MATCH_TEAM WHERE Summoner_Name = '{$_SESSION['SummonerName']}' ORDER BY Champion";
+	$result = mysql_query($sql);
+	
+	echo "<select name='Champion'>";
+	while ($row = mysql_fetch_array($result)) {
+	    echo "<option value='" . $row['Champion'] . "'>" . $row['Champion'] . "</option>";
+	}
+	echo "</select>";
+
+
+	?>
+	&nbsp; <input type = "submit" value = "See My Stats" align="center">
+	</FORM>
+	<BR>
+	<a href="http://leagueofpioneers.com/mystats.php" class="button-link-small"> Back to My Stats </a>
+	
+      </h1>
+
+
+
+
+ 
+ 
+ </div>
+</body>
+     
+  <div class="footer">
+  	<p>
+  	© Copyright 2015 www.leagueofpioneers.com. All rights reserved. <br>
+  	 League of Pioneers isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
+        </p>
+  </div>
+
+</html>
+
+
+ 
