@@ -1,0 +1,25 @@
+<html>
+<body>
+<?php
+
+//Declaring variables for Database UN, PW, and DB
+$username="ckopel";
+$password="xxx";
+$database="LeagueofPioneers";
+
+//Connect to database
+
+mysql_connect(localhost,$username,$password);
+@mysql_select_db($database) or die( "Unable to select database");
+$query="SELECT Summoner_Name FROM PLAYER";$result=mysql_query($query);
+
+while($row = mysql_fetch_assoc($result))
+{
+   print_r($row);
+}
+
+mysql_close();
+
+?>
+</body>
+</html>
