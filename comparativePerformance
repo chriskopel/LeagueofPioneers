@@ -1,0 +1,191 @@
+//Chris Kopel
+<?php
+  session_start();
+  header("Cache-Control: no-cache");
+  header("Pragma: no-cache");
+  $_SESSION["SummonerCompare"] = $_POST["SummonerComp"];
+  $_SESSION["RoleCompare"] = $_POST["RoleComp"];
+  if (! isset($_SESSION['loggedIn'])) {
+	header( 'Location: http://www.leagueofpioneers.com' ) ;
+}
+
+  $connect = mysql_connect("localhost","ckopel", "xxx");
+            if (!$connect) {
+                die(mysql_error());
+            }
+	    mysql_select_db("LeagueofPioneers");
+            //Select the Summoner and the Role and Count the Games Played for that Role and store that value as a Session Variable
+	    $rplayresultComp = mysql_query("SELECT COUNT(Role) FROM MATCH_TEAM WHERE Summoner_Name = '{$_SESSION['SummonerName']}' AND Role = '{$_SESSION['RoleCompare']}'");
+            $countroleComp = mysql_fetch_assoc ( $rplayresultComp);
+            $GPlayRComp = $countroleComp['COUNT(Role)'];
+            $_SESSION ['COUNT(Role)Comp'] = $GPlayRComp;
+?>
+<?php
+
+  $connect = mysql_connect("localhost","ckopel", "xxx");
+            if (!$connect) {
+                die(mysql_error());
+            }
+	    mysql_select_db("LeagueofPioneers");
+            //Select the Compared Summoner and the Role and Count the Games Played for that Role and store that value as a Session Variable
+	    $rplayresultCompE = mysql_query("SELECT COUNT(Role) FROM MATCH_TEAM WHERE Summoner_Name = '{$_SESSION['SummonerCompare']}' AND Role = '{$_SESSION['RoleCompare']}'");
+            $countroleCompE = mysql_fetch_assoc ( $rplayresultCompE);
+            $GPlayRCompE = $countroleCompE['COUNT(Role)'];
+            $_SESSION ['COUNT(Role)CompE'] = $GPlayRCompE;
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<title>League of Pioneers</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" >
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="home-styles.css">
+<link rel="shortcut icon" href="LoPlogo - tab.ico">
+</head>
+
+<body>
+
+<?php
+include 'header.php';
+?>
+
+<div id = maincontainer>
+  <div class="img">
+      <a href="http://www.leagueofpioneers.com/Welcome.php">
+      <img src="LoPlogo.png" alt="logo"></a>
+  </div>
+
+      <h1>Comparative Performance <BR>
+
+      
+      <?php echo $_SESSION["SummonerName"]; ?> VS. <?php echo $_SESSION["SummonerCompare"]; ?>
+      <BR>
+      Role: <?php echo $_SESSION["RoleCompare"] ?> <BR>
+      
+      <?php
+      echo "<img src = 'roleimages/" . $_SESSION["RoleCompare"] . ".jpg'>";
+      ?> <BR>
+      
+      Averages for <?php echo $_SESSION["SummonerName"]; ?>:<BR>
+      You have played   <?php 
+      	echo  $_SESSION ['COUNT(Role)Comp']; 
+      ?> 
+      <?php
+      if($_SESSION['COUNT(Role)Comp'] == 1) {
+        echo "game";
+      } else {
+        echo "games";
+        }
+        ?>
+      
+       as <?php echo $_SESSION["RoleCompare"]; ?><BR>
+      
+      
+      <table border="1" style="width:100%" align = "center">
+        <thead>
+            <tr>
+                <td>Avg Kills</td>
+                <td>Avg Deaths</td>
+                <td>Avg Assists</td>
+                <td>Avg CS</td>
+                <td>Avg Gold</td>
+            </tr>
+        </thead>      
+      
+       <tbody>
+        <?php
+            $connect = mysql_connect("localhost","ckopel", "xxx");
+            if (!$connect) {
+                die(mysql_error());
+            }
+            mysql_select_db("LeagueofPioneers");
+            $results = mysql_query("SELECT AVG(Kills), AVG(Deaths), AVG(Assists), AVG(CS), AVG(Gold) FROM MATCH_TEAM WHERE Summoner_Name = '{$_SESSION['SummonerName']}'AND Role = '{$_SESSION['RoleCompare']}'");
+            while($row = mysql_fetch_array($results)) {
+            ?>
+                <tr>
+                    <td><?php echo number_format($row['AVG(Kills)'], 2)?></td>
+                    <td><?php echo number_format($row['AVG(Deaths)'], 2)?></td>
+                    <td><?php echo number_format($row['AVG(Assists)'], 2)?></td>
+                    <td><?php echo number_format($row['AVG(CS)'], 0)?></td>
+                    <td><?php echo number_format($row['AVG(Gold)'], 0)?></td>
+                </tr>
+
+            <?php
+            }
+            ?>
+            </tbody>
+            </table>
+      
+      
+      <BR>
+      Averages for <?php echo $_SESSION["SummonerCompare"]; ?>:<BR>
+      <?php echo $_SESSION["SummonerCompare"]; ?> has played   <?php 
+      	echo  $_SESSION ['COUNT(Role)CompE']; 
+      ?> 
+      <?php
+      if($_SESSION['COUNT(Role)CompE'] == 1) {
+        echo "game";
+      } else {
+        echo "games";
+        }
+        ?>
+      
+       as <?php echo $_SESSION["RoleCompare"]; ?><BR>
+      
+      
+      <table border="1" style="width:100%" align = "center">
+        <thead>
+            <tr>
+                <td>Avg Kills</td>
+                <td>Avg Deaths</td>
+                <td>Avg Assists</td>
+                <td>Avg CS</td>
+                <td>Avg Gold</td>
+            </tr>
+        </thead>      
+      
+       <tbody>
+        <?php
+            $connect = mysql_connect("localhost","ckopel", "xxx");
+            if (!$connect) {
+                die(mysql_error());
+            }
+            mysql_select_db("LeagueofPioneers");
+            $results = mysql_query("SELECT AVG(Kills), AVG(Deaths), AVG(Assists), AVG(CS), AVG(Gold) FROM MATCH_TEAM WHERE Summoner_Name = '{$_SESSION['SummonerCompare']}'AND Role = '{$_SESSION['RoleCompare']}'");
+            while($row = mysql_fetch_array($results)) {
+            ?>
+                <tr>
+                    <td><?php echo number_format($row['AVG(Kills)'], 2)?></td>
+                    <td><?php echo number_format($row['AVG(Deaths)'], 2)?></td>
+                    <td><?php echo number_format($row['AVG(Assists)'], 2)?></td>
+                    <td><?php echo number_format($row['AVG(CS)'], 0)?></td>
+                    <td><?php echo number_format($row['AVG(Gold)'], 0)?></td>
+                </tr>
+
+            <?php
+            }
+            ?>
+            </tbody>
+            </table>
+      
+      <BR> <a href="http://leagueofpioneers.com/comparativeperformance.php" class="button-link"> Select New Comparison </a>
+      
+      </h1>
+      
+
+ 
+ </div>
+ 
+</body>
+     
+  <div class="footer">
+  	<p>
+  	© Copyright 2015 www.leagueofpioneers.com. All rights reserved. <br>
+  	 League of Pioneers isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
+        </p>
+  </div>
+
+</html>
+
+
+ 
